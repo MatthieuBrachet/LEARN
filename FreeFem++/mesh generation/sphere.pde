@@ -1,7 +1,7 @@
 load "msh3"
  
 border cc(t=0,2*pi){x=cos(t);y=sin(t);label=1;}
-mesh Th2= buildmesh(cc(20));
+mesh Th2= buildmesh(cc(150));
 
 plot(Th2, wait=1);
  
