@@ -12,6 +12,7 @@ real eps=1e-3;
 func zmin=-sqrt(1+eps-x*x-y*y);
 func zmax=sqrt(1+eps-x*x-y*y);
  
+
 int[int] rup=[0,2],rdown=[0,1],rmid=[1,3,2,3,3,3,4,3];
  
 mesh3 Th=buildlayers(Th2,20,
@@ -21,5 +22,4 @@ mesh3 Th=buildlayers(Th2,20,
   reffacelow = rdown);
 
 plot(Th, wait=1);
-
 plot(Th,Th2);
