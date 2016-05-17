@@ -1,0 +1,28 @@
+int nnext=100, nnint=30;
+int cstx=100, csty=70;
+real eps=0.01;
+real ddt=0.00001, T=1;
+
+func uinit=0.5*(cos(cstx*pi*x)+cos(csty*pi*y));
+
+border Cext(t=0,2*pi){x=2*cos(t); y=2*sin(t);}
+border Cint(t=0,2*pi){x=0.4*cos(t)+1; y=0.4*sin(t);}
+plot(Cext(nnext)+Cint(-nnint), wait=true, ps="domain.eps");
+
+mesh Th=buildmesh(Cext(nnext)+Cint(-nnint));
+plot(Th, wait=1, ps="mesh.eps");
+
+fespace Vh(Th,P2);
+Vh u=uinit,v,uold;
+plot(u, wait=1);
+
+problem AllenCahn(u,v)=int2d(Th)(u*v/ddt+(dx(u)*dx(v)+dy(u)*dy(v)))
+	+ int2d(Th)(uold*v/ddt-uold*(uold^2-1)*v/eps^2);
+for (real t=0;t<T; t+=ddt){
+	uold=u;
+	AllenCahn;
+	plot(u);
+}
+	
+
+
