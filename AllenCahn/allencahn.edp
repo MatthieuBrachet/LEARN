@@ -1,0 +1,45 @@
+load "iovtk"
+
+int nnext=1000, nnint=20;
+int iter=0;
+int cstx=1000, csty=700;
+real a=0.6, gradius=1, mradius=0.1;
+real eps=0.01;
+real ddt=0.01, T=1;
+
+func uinit=(cos(cstx*pi*x)*cos(csty*pi*y));
+
+border Cint1(t=0,2*pi) {x=mradius*cos(t)+a; y=mradius*sin(t);};
+border Cint2(t=0,2*pi) {x=mradius*cos(t)-a; y=mradius*sin(t);};
+border Cint3(t=0,2*pi) {x=mradius*cos(t); y=mradius*sin(t)+a;};
+border Cint4(t=0,2*pi) {x=mradius*cos(t); y=mradius*sin(t)-a;};
+border Cint5(t=0,2*pi) {x=mradius*cos(t); y=mradius*sin(t);};
+border Cext(t=0,2*pi) {x=gradius*cos(t); y=gradius*sin(t);};
+
+mesh Th=buildmesh(Cint1(-nnint)+Cint2(-nnint)+Cint3(-nnint)+Cint4(-nnint)+Cint5(-nnint)+Cext(nnext));
+//plot(Th, wait=1, ps="mesh.eps");
+
+fespace Vh(Th,P2);
+Vh u=uinit,v,uold;
+//plot(u, wait=1);
+
+problem AllenCahnx(u,v, solver=LU)=int2d(Th)(u*v/ddt+(dx(u)*dx(v)))
+	+ int2d(Th)(-uold*v/ddt);
+
+problem AllenCahny(u,v, solver=LU)=int2d(Th)(u*v/ddt+(dy(u)*dy(v)))
+	+ int2d(Th)(-uold*v/ddt);
+
+for (real t=0;t<T; t+=ddt){
+	iter=iter+1;
+	uold=u;
+	AllenCahnx;
+	uold=u;
+	AllenCahny;
+	uold=u;
+	u=uold/sqrt(uold^2+(1-uold^2)*exp(-2*ddt/eps^2));
+	//plot(u);
+	savevtk("./results_vtk/allencahn"+iter+".vtk",Th,u);
+}
+	
+
+
