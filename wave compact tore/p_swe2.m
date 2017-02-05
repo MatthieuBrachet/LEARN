@@ -6,7 +6,7 @@ global n dx
 global X Y
 global h0 gp cgrav length ccor
 
-n=255;
+n=63;
 mod2;
 video='yes';
 
@@ -16,7 +16,7 @@ cfl=.7;
 ddt=cfl*dx/max([cgrav,ccor]);
 
 %% initial function
-test = 1;
+test = 2;
 if test == 1
     r=sqrt((X-.3*length).^2+(Y-.5*length).^2);
     h=h0.*exp(-(r.^2./(.01*length)))+h0;

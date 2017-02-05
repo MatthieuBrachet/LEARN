@@ -4,13 +4,13 @@ global n dx
 global X Y
 global h0 gp cgrav length
 
-n=63;
+n=511;
 mod2;
-video='yes';
+video='no';
 
 %% time data
-Tmax=3;
-cfl=1.1;
+Tmax=1;
+cfl=1;
 ddt=cfl*dx/cgrav;
 
 %% initial function
